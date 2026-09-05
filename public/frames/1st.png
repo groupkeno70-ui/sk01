@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Rich Golden Gradients -->
+    <linearGradient id="gold1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff6a6" />
+      <stop offset="25%" stop-color="#ffd54f" />
+      <stop offset="50%" stop-color="#d4a017" />
+      <stop offset="75%" stop-color="#996e00" />
+      <stop offset="100%" stop-color="#ffd54f" />
+    </linearGradient>
+    <linearGradient id="leafGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#fff9c4" />
+      <stop offset="30%" stop-color="#ffca28" />
+      <stop offset="70%" stop-color="#c79100" />
+      <stop offset="100%" stop-color="#785400" />
+    </linearGradient>
+    <linearGradient id="crownGold" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffe082" />
+      <stop offset="30%" stop-color="#ffb300" />
+      <stop offset="70%" stop-color="#e65100" />
+      <stop offset="100%" stop-color="#ffc107" />
+    </linearGradient>
+    <radialGradient id="rubyGem" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#ff8a80" />
+      <stop offset="30%" stop-color="#d50000" />
+      <stop offset="100%" stop-color="#4a0000" />
+    </radialGradient>
+    <linearGradient id="whitePlaque" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#f5f5f0" />
+    </linearGradient>
+    <filter id="heavyGlow" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#000000" flood-opacity="0.75"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#heavyGlow)">
+    <!-- Outer Thick Golden Wreath Ring -->
+    <circle cx="256" cy="270" r="182" fill="none" stroke="url(#gold1)" stroke-width="16" stroke-linecap="round"/>
+    <circle cx="256" cy="270" r="168" fill="none" stroke="#ffd54f" stroke-width="3" opacity="0.9"/>
+    <circle cx="256" cy="270" r="196" fill="none" stroke="#8c6400" stroke-width="3"/>
+
+    <!-- Multi-layered Laurel Leaves on Both Sides -->
+    <!-- Left Leaves -->
+    <g fill="url(#leafGrad)" stroke="#4e3300" stroke-width="1.5">
+      <!-- Segment 1 -->
+      <path d="M 90 260 C 40 230 40 180 85 165 C 95 205 110 235 90 260 Z" />
+      <path d="M 105 230 C 50 200 65 140 115 140 C 115 180 120 210 105 230 Z" />
+      <path d="M 95 295 C 45 320 40 370 85 385 C 100 345 110 315 95 295 Z" />
+      <path d="M 110 325 C 60 355 75 415 125 415 C 120 375 125 345 110 325 Z" />
+
+      <!-- Segment 2 Upper -->
+      <path d="M 115 160 C 75 120 85 70 135 70 C 140 110 135 140 115 160 Z" />
+      <path d="M 145 125 C 115 80 135 35 185 45 C 180 85 165 115 145 125 Z" />
+      <path d="M 180 90 C 160 45 195 15 235 35 C 220 70 200 90 180 90 Z" />
+
+      <!-- Segment 2 Lower -->
+      <path d="M 125 390 C 90 430 110 480 160 480 C 160 440 150 410 125 390 Z" />
+      <path d="M 160 435 C 135 475 165 515 210 500 C 205 460 185 435 160 435 Z" />
+
+      <!-- Golden Berries Clusters Left -->
+      <circle cx="130" cy="200" r="5" fill="#fff2a8" stroke="#593a00" stroke-width="1"/>
+      <circle cx="140" cy="190" r="4" fill="#ffd54f" stroke="#593a00" stroke-width="1"/>
+      <circle cx="130" cy="350" r="5" fill="#fff2a8" stroke="#593a00" stroke-width="1"/>
+      <circle cx="140" cy="360" r="4" fill="#ffd54f" stroke="#593a00" stroke-width="1"/>
+    </g>
+
+    <!-- Right Leaves -->
+    <g fill="url(#leafGrad)" stroke="#4e3300" stroke-width="1.5">
+      <!-- Segment 1 -->
+      <path d="M 422 260 C 472 230 472 180 427 165 C 417 205 402 235 422 260 Z" />
+      <path d="M 407 230 C 462 200 447 140 397 140 C 397 180 392 210 407 230 Z" />
+      <path d="M 417 295 C 467 320 472 370 427 385 C 412 345 402 315 417 295 Z" />
+      <path d="M 402 325 C 452 355 437 415 387 415 C 392 375 387 345 402 325 Z" />
+
+      <!-- Segment 2 Upper -->
+      <path d="M 397 160 C 437 120 427 70 377 70 C 372 110 377 140 397 160 Z" />
+      <path d="M 367 125 C 397 80 377 35 327 45 C 332 85 347 115 367 125 Z" />
+      <path d="M 332 90 C 352 45 317 15 277 35 C 292 70 312 90 332 90 Z" />
+
+      <!-- Segment 2 Lower -->
+      <path d="M 387 390 C 422 430 402 480 352 480 C 352 440 362 410 387 390 Z" />
+      <path d="M 352 435 C 377 475 347 515 302 500 C 307 460 327 435 352 435 Z" />
+
+      <!-- Golden Berries Clusters Right -->
+      <circle cx="382" cy="200" r="5" fill="#fff2a8" stroke="#593a00" stroke-width="1"/>
+      <circle cx="372" cy="190" r="4" fill="#ffd54f" stroke="#593a00" stroke-width="1"/>
+      <circle cx="382" cy="350" r="5" fill="#fff2a8" stroke="#593a00" stroke-width="1"/>
+      <circle cx="372" cy="360" r="4" fill="#ffd54f" stroke="#593a00" stroke-width="1"/>
+    </g>
+
+    <!-- Top Glorious Crown with Winglets and Rubies -->
+    <g id="crownTop">
+      <!-- Crown Wing Feathers flanking crown -->
+      <path d="M 180 80 C 145 60 140 25 155 10 C 165 30 180 55 200 65 Z" fill="url(#gold1)" stroke="#4e3300" stroke-width="1.5"/>
+      <path d="M 190 75 C 160 50 160 20 175 10 C 180 28 195 50 210 65 Z" fill="url(#gold1)" stroke="#4e3300" stroke-width="1.5"/>
+      <path d="M 332 80 C 367 60 372 25 357 10 C 347 30 332 55 312 65 Z" fill="url(#gold1)" stroke="#4e3300" stroke-width="1.5"/>
+      <path d="M 322 75 C 352 50 352 20 337 10 C 332 28 317 50 302 65 Z" fill="url(#gold1)" stroke="#4e3300" stroke-width="1.5"/>
+
+      <!-- Crown Body -->
+      <path d="M 195 90 L 175 35 L 220 58 L 256 12 L 292 58 L 337 35 L 317 90 Z" fill="url(#crownGold)" stroke="#3b2200" stroke-width="2.5"/>
+      <path d="M 195 90 C 225 102 287 102 317 90 L 312 98 C 285 110 227 110 200 98 Z" fill="url(#gold1)" stroke="#3b2200" stroke-width="2"/>
+
+      <!-- Rubies & Jewels on Crown -->
+      <circle cx="256" cy="12" r="8" fill="url(#rubyGem)" stroke="#ffe082" stroke-width="2"/>
+      <circle cx="175" cy="35" r="6" fill="url(#rubyGem)" stroke="#ffe082" stroke-width="1.5"/>
+      <circle cx="337" cy="35" r="6" fill="url(#rubyGem)" stroke="#ffe082" stroke-width="1.5"/>
+      <circle cx="220" cy="58" r="5" fill="url(#rubyGem)" stroke="#ffe082" stroke-width="1.5"/>
+      <circle cx="292" cy="58" r="5" fill="url(#rubyGem)" stroke="#ffe082" stroke-width="1.5"/>
+      <!-- Crown Base Rubies -->
+      <circle cx="230" cy="96" r="4" fill="url(#rubyGem)"/>
+      <circle cx="256" cy="98" r="5" fill="url(#rubyGem)"/>
+      <circle cx="282" cy="96" r="4" fill="url(#rubyGem)"/>
+    </g>
+
+    <!-- Bottom 1st Ornate Frame with Gold Scrollwork -->
+    <g id="plaque1st" transform="translate(0, 5)">
+      <!-- Golden Cartouche Outer Scrollwork -->
+      <path d="M 140 435 C 160 410, 205 415, 256 415 C 307 415, 352 410, 372 435 C 395 460, 390 495, 355 500 C 315 505, 285 510, 256 515 C 227 510, 197 505, 157 500 C 122 495, 117 460, 140 435 Z" fill="url(#gold1)" stroke="#3e2000" stroke-width="3"/>
+      
+      <!-- Inner White/Parchment Enclosure -->
+      <path d="M 162 438 C 180 425, 210 427, 256 427 C 302 427, 332 425, 350 438 C 368 450, 362 480, 340 486 C 305 494, 280 496, 256 502 C 232 496, 207 494, 172 486 C 150 480, 144 450, 162 438 Z" fill="url(#whitePlaque)" stroke="#d4af37" stroke-width="2"/>
+      
+      <!-- Ruby Gems on Plaque Crest -->
+      <polygon points="256,415 262,423 256,431 250,423" fill="url(#rubyGem)" stroke="#ffe082" stroke-width="1"/>
+      <polygon points="256,498 262,506 256,514 250,506" fill="url(#rubyGem)" stroke="#ffe082" stroke-width="1"/>
+
+      <!-- 1st Text in Gold Serif/Calligraphic Style -->
+      <text x="256" y="478" font-family="'Brush Script MT', 'Palatino Linotype', 'Times New Roman', Georgia, cursive, serif" font-style="italic" font-weight="bold" font-size="44" fill="url(#gold1)" stroke="#593800" stroke-width="1" text-anchor="middle">1st</text>
+    </g>
+  </g>
+</svg>

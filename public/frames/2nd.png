@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="wingGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fffde7" />
+      <stop offset="20%" stop-color="#fff176" />
+      <stop offset="50%" stop-color="#fbc02d" />
+      <stop offset="80%" stop-color="#af8600" />
+      <stop offset="100%" stop-color="#ffe082" />
+    </linearGradient>
+    <linearGradient id="hexGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff59d" />
+      <stop offset="40%" stop-color="#fbc02d" />
+      <stop offset="70%" stop-color="#d4a017" />
+      <stop offset="100%" stop-color="#8c6400" />
+    </linearGradient>
+    <filter id="wingGlow" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#000000" flood-opacity="0.7"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#wingGlow)">
+    <!-- Left Epic Golden Feather Wings -->
+    <g fill="url(#wingGold)" stroke="#4e3300" stroke-width="1.8" stroke-linejoin="round">
+      <!-- Feather 1 (Supreme Top Wing Feather) -->
+      <path d="M 140 260 C 95 195, 25 105, 42 25 C 65 80, 100 170, 160 235 Z" />
+      <!-- Feather 2 -->
+      <path d="M 130 270 C 72 205, 5 125, 12 55 C 40 110, 80 188, 145 252 Z" />
+      <!-- Feather 3 -->
+      <path d="M 125 285 C 60 225, 2 165, 5 105 C 32 150, 75 218, 134 268 Z" />
+      <!-- Feather 4 -->
+      <path d="M 120 302 C 48 245, 2 205, 5 155 C 30 190, 70 248, 126 288 Z" />
+      <!-- Feather 5 -->
+      <path d="M 124 322 C 60 278, 10 245, 14 212 C 40 235, 78 278, 130 308 Z" />
+      <!-- Feather 6 -->
+      <path d="M 134 342 C 75 308, 30 285, 32 262 C 55 275, 92 312, 140 328 Z" />
+      <!-- Feather 7 -->
+      <path d="M 148 362 C 95 338, 50 325, 52 308 C 75 315, 110 340, 154 350 Z" />
+      <!-- Feather 8 (Bottom Wing Tip) -->
+      <path d="M 168 382 C 120 365, 80 362, 82 345 C 105 348, 138 368, 172 374 Z" />
+    </g>
+
+    <!-- Right Epic Golden Feather Wings -->
+    <g fill="url(#wingGold)" stroke="#4e3300" stroke-width="1.8" stroke-linejoin="round">
+      <!-- Feather 1 -->
+      <path d="M 372 260 C 417 195, 487 105, 470 25 C 447 80, 412 170, 352 235 Z" />
+      <!-- Feather 2 -->
+      <path d="M 382 270 C 440 205, 507 125, 500 55 C 472 110, 432 188, 367 252 Z" />
+      <!-- Feather 3 -->
+      <path d="M 387 285 C 452 225, 510 165, 507 105 C 480 150, 437 218, 378 268 Z" />
+      <!-- Feather 4 -->
+      <path d="M 392 302 C 464 245, 510 205, 507 155 C 482 190, 442 248, 386 288 Z" />
+      <!-- Feather 5 -->
+      <path d="M 388 322 C 452 278, 502 245, 498 212 C 472 235, 434 278, 382 308 Z" />
+      <!-- Feather 6 -->
+      <path d="M 378 342 C 437 308, 482 285, 480 262 C 457 275, 420 312, 372 328 Z" />
+      <!-- Feather 7 -->
+      <path d="M 364 362 C 417 338, 462 325, 460 308 C 437 315, 402 340, 358 350 Z" />
+      <!-- Feather 8 -->
+      <path d="M 344 382 C 392 365, 432 362, 430 345 C 407 348, 374 368, 340 374 Z" />
+    </g>
+
+    <!-- Star Geometric Frame Hexagon & Armor Plates -->
+    <g fill="none" stroke="url(#hexGold)" stroke-width="12" stroke-linejoin="miter">
+      <!-- Main Hexagon Frame with faceted 3D edges -->
+      <polygon points="256,115 385,188 385,324 256,398 127,324 127,188" fill="none" stroke="url(#hexGold)" stroke-width="16" stroke-linejoin="bevel"/>
+      <!-- Inner Thin Trim Ring -->
+      <polygon points="256,128 373,195 373,317 256,385 139,317 139,195" fill="none" stroke="#fff59d" stroke-width="2"/>
+      
+      <!-- Top Crest Sharp Diamond Peak -->
+      <polygon points="256,92 276,128 236,128" fill="url(#wingGold)" stroke="#4e3300" stroke-width="2.5"/>
+      <!-- Side Flank Star Points -->
+      <polygon points="400,256 368,236 368,276" fill="url(#wingGold)" stroke="#4e3300" stroke-width="2.5"/>
+      <polygon points="112,256 144,236 144,276" fill="url(#wingGold)" stroke="#4e3300" stroke-width="2.5"/>
+    </g>
+
+    <!-- Inner Avatar Cutout Circle -->
+    <circle cx="256" cy="256" r="136" fill="none" stroke="url(#hexGold)" stroke-width="10" />
+    <circle cx="256" cy="256" r="144" fill="none" stroke="#fff9c4" stroke-width="2" />
+
+    <!-- Bottom Geometric V-Crest with 2nd Text -->
+    <g id="crest2nd">
+      <!-- Lower Chevron Brackets -->
+      <polygon points="256,448 340,378 322,360 256,416 190,360 172,378" fill="url(#hexGold)" stroke="#4e3300" stroke-width="2.5"/>
+      <polygon points="256,432 325,376 312,365 256,408 200,365 187,376" fill="#ffd54f" stroke="#8c6400" stroke-width="1.5"/>
+      
+      <!-- '603' or decorative engraving detail left side -->
+      <text x="165" y="378" font-family="sans-serif" font-weight="bold" font-size="16" fill="#ffe082" stroke="#593800" stroke-width="0.5" transform="rotate(-35, 165, 378)">603</text>
+
+      <!-- 2nd Text Centered at bottom aperture -->
+      <text x="256" y="376" font-family="'Palatino Linotype', 'Times New Roman', Georgia, serif" font-weight="bold" font-size="48" fill="url(#wingGold)" stroke="#3b2200" stroke-width="1.5" text-anchor="middle">2nd</text>
+    </g>
+  </g>
+</svg>
