@@ -10893,7 +10893,45 @@ const [isPartyGiftPopupOpen, setIsPartyGiftPopupOpen] = useState<boolean>(false)
     setPartyRoomStatus("Refreshing party rooms...");
     try {
       const data: any = await api.get("/api/party-rooms");
-      setActivePartyRooms(Array.isArray(data?.data) ? data.data : []);
+      const rawRooms = Array.isArray(data?.data) ? data.data : [];
+      const now = Date.now();
+      const STALE_MS = 60 * 1000;
+      const parseTs = (v: any) => {
+        if (!v) return 0;
+        if (typeof v === "number") return v;
+        let s = String(v).trim();
+        if (/^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}(\.\d+)?$/.test(s)) {
+          s = s.replace(" ", "T") + "Z";
+        }
+        const t = new Date(s).getTime();
+        return Number.isFinite(t) ? t : 0;
+      };
+
+      const myId = getCurrentUserId();
+      const activeFiltered = rawRooms.filter((r: any) => {
+        if (!r) return false;
+        const isMyRoom =
+          (myId && Number(r.hostId || r.host_id) === Number(myId)) ||
+          (activePartyRoom?.id && Number(r.id) === Number(activePartyRoom.id));
+        if (isMyRoom) return true;
+
+        // Hide test rooms generated during automated testing
+        const title = String(r.title || "").trim().toLowerCase();
+        const host = String(r.hostName || "").trim().toLowerCase();
+        if (title.includes("test") || /^room \d+$/i.test(title)) return false;
+        if (host.includes("test") || /^u \d+$/i.test(host)) return false;
+
+        if (r.live === false || r.is_live === false || r.isLive === false) return false;
+        if (r.ended === true || r.is_ended === true || r.endedAt || r.ended_at) return false;
+
+        const hb = parseTs(
+          r.lastHeartbeatAt || r.last_heartbeat_at || r.updatedAt || r.updated_at,
+        );
+        if (hb && now - hb > STALE_MS) return false;
+        return true;
+      });
+
+      setActivePartyRooms(activeFiltered);
       setPartyRoomStatus("");
     } catch (err: any) {
       setPartyRoomStatus(err?.message || "Could not load party rooms.");
