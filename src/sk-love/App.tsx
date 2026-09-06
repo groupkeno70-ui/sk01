@@ -783,6 +783,23 @@ export default function App() {
     return maleAvatars[hash % maleAvatars.length];
   };
 
+  // Helper to ensure an avatar passed to party seat APIs is always a short safe URL (<= 480 chars)
+  // so MySQL VARCHAR(512) party_room_seats.avatar column never overflows with Base64 data (which causes 409 conflict).
+  const getSafeSeatAvatar = (avatar?: string | null, userName?: string | null): string => {
+    if (avatar && /^https?:\/\//i.test(avatar) && avatar.length <= 480) {
+      return avatar;
+    }
+    return "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80";
+  };
+
+  // Helper to ensure an avatar in party chat protocol tags is short and doesn't exceed 500 characters
+  const getSafeChatAvatar = (avatar?: string | null): string => {
+    if (avatar && /^https?:\/\//i.test(avatar) && avatar.length <= 150) {
+      return avatar;
+    }
+    return "";
+  };
+
 
   // ---- হ্যান্ডলার: রোল রিকোয়েস্ট (determineUserRole) ----
   const determineUserRole = (email: string): UserRole => {
@@ -1357,6 +1374,52 @@ export default function App() {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const cropAndCompressImage = (
+    imageSrc: string,
+    scale = 1.0,
+    rotate = 0,
+    targetWidth = 240,
+    targetHeight = 240,
+    quality = 0.82,
+  ): Promise<string> => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => {
+        try {
+          const canvas = document.createElement("canvas");
+          canvas.width = targetWidth;
+          canvas.height = targetHeight;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) {
+            resolve(imageSrc);
+            return;
+          }
+          ctx.save();
+          ctx.translate(targetWidth / 2, targetHeight / 2);
+          ctx.rotate((rotate * Math.PI) / 180);
+          ctx.scale(scale, scale);
+          const aspect = img.width / img.height;
+          let drawW = targetWidth;
+          let drawH = targetHeight;
+          if (aspect > 1) {
+            drawW = targetHeight * aspect;
+          } else {
+            drawH = targetWidth / aspect;
+          }
+          ctx.drawImage(img, -drawW / 2, -drawH / 2, drawW, drawH);
+          ctx.restore();
+          const compressed = canvas.toDataURL("image/jpeg", quality);
+          resolve(compressed);
+        } catch {
+          resolve(imageSrc);
+        }
+      };
+      img.onerror = () => resolve(imageSrc);
+      img.src = imageSrc;
+    });
   };
 
   // ==========================================
@@ -10953,9 +11016,10 @@ const [isPartyGiftPopupOpen, setIsPartyGiftPopupOpen] = useState<boolean>(false)
         const rideInfo = RIDES_CATALOG.find((r) => r.id === equippedRide);
         const rideLabel = rideInfo ? `${rideInfo.name} ${rideInfo.emoji}` : "VIP Ride 🏎️";
         const frameToUse = partyFrameToSend || "none";
+        const safeHostAvatar = getSafeChatAvatar(profileAvatarImg);
         void api
           .post(`/api/party-rooms/${createdRoomId}/chat`, {
-            text: `[ENTRY:${rideIdToUse}:${encodeURIComponent(registerName || "Host")}:${encodeURIComponent(profileAvatarImg || "")}:${encodeURIComponent(frameToUse)}] ✨ ${registerName || "Host"} opened the party room ${equippedRide ? `with ${rideLabel}` : ""}!`,
+            text: `[ENTRY:${rideIdToUse}:${encodeURIComponent(registerName || "Host")}:${encodeURIComponent(safeHostAvatar)}:${encodeURIComponent(frameToUse)}] ✨ ${registerName || "Host"} opened the party room ${equippedRide ? `with ${rideLabel}` : ""}!`,
           })
           .catch(() => undefined);
       }
@@ -11247,10 +11311,7 @@ const [isPartyGiftPopupOpen, setIsPartyGiftPopupOpen] = useState<boolean>(false)
     }
     const seatNum = seatIndex + 1;
     try {
-      const safeAvatar =
-        profileAvatarImg && /^https?:\/\//i.test(profileAvatarImg) && profileAvatarImg.length <= 480
-          ? profileAvatarImg
-          : null;
+      const safeAvatar = getSafeSeatAvatar(profileAvatarImg, registerName);
       const data: any = await api.post(
         `/api/party-rooms/${activePartyRoom.id}/seats/${seatNum}/${shouldLeave ? "leave" : "join"}`,
         shouldLeave
@@ -11331,9 +11392,10 @@ const [isPartyGiftPopupOpen, setIsPartyGiftPopupOpen] = useState<boolean>(false)
             try { localStorage.setItem(`sk_frame_${selfUid}`, frameToUse); } catch {}
           }
         }
+        const safeChatIcon = getSafeChatAvatar(selfIcon);
         void api
           .post(`/api/party-rooms/${activePartyRoom.id}/chat`, {
-            text: `[SEAT:${seatIndex}:${shouldLeave ? "LEAVE" : encodeURIComponent(selfName)}:${encodeURIComponent(selfIcon)}:${encodeURIComponent(frameToUse)}:${encodeURIComponent(String(selfUid))}] ${shouldLeave ? "" : `[ENTRY:${rideToUse}:${encodeURIComponent(selfName)}:${encodeURIComponent(selfIcon)}:${encodeURIComponent(frameToUse)}:${encodeURIComponent(String(selfUid))}] ✨ ${selfName} took seat ${seatIndex + 1}!`}`,
+            text: `[SEAT:${seatIndex}:${shouldLeave ? "LEAVE" : encodeURIComponent(selfName)}:${encodeURIComponent(safeChatIcon)}:${encodeURIComponent(frameToUse)}:${encodeURIComponent(String(selfUid))}] ${shouldLeave ? "" : `[ENTRY:${rideToUse}:${encodeURIComponent(selfName)}:${encodeURIComponent(safeChatIcon)}:${encodeURIComponent(frameToUse)}:${encodeURIComponent(String(selfUid))}] ✨ ${selfName} took seat ${seatIndex + 1}!`}`,
           })
           .catch(() => undefined);
       }
@@ -11467,10 +11529,7 @@ const [isPartyGiftPopupOpen, setIsPartyGiftPopupOpen] = useState<boolean>(false)
 
     try {
       const seatNum = seatIndex + 1;
-      const _safeIcon =
-        selfIcon && /^https?:\/\//i.test(String(selfIcon)) && String(selfIcon).length <= 480
-          ? selfIcon
-          : null;
+      const _safeIcon = getSafeSeatAvatar(selfIcon, registerName);
       const data: any = await api.post(`/api/party-rooms/${activePartyRoom.id}/seats/${seatNum}/join`, {
         avatarIcon: _safeIcon,
         frame: partyFrameToSend,
@@ -11652,10 +11711,7 @@ const [isPartyGiftPopupOpen, setIsPartyGiftPopupOpen] = useState<boolean>(false)
       const seatNum = seatIndex + 1;
       // Only send a short http(s) avatar URL. A long/data-URL avatar would fail
       // the backend's `avatarIcon max` rule (422) and kick the guest ~1s later.
-      const safeAvatar =
-        profileAvatarImg && /^https?:\/\//i.test(profileAvatarImg) && profileAvatarImg.length <= 480
-          ? profileAvatarImg
-          : null;
+      const safeAvatar = getSafeSeatAvatar(profileAvatarImg, selfName);
       const data: any = await api.post(
         `/api/party-rooms/${activePartyRoom.id}/seats/${seatNum}/join`,
         {
@@ -11719,9 +11775,10 @@ const [isPartyGiftPopupOpen, setIsPartyGiftPopupOpen] = useState<boolean>(false)
             userFrameMapRef.current.set(uidStr, partyFrameToSend);
           }
         }
+        const safeChatAvatar = getSafeChatAvatar(profileAvatarImg);
         void api
           .post(`/api/party-rooms/${activePartyRoom.id}/chat`, {
-            text: `[SEAT:${seatIndex}:${encodeURIComponent(selfName)}:${encodeURIComponent(profileAvatarImg || "")}:${encodeURIComponent(frameToUse)}:${encodeURIComponent(String(currentUserId || ""))}] [ENTRY:${rideToUse}:${encodeURIComponent(selfName)}:${encodeURIComponent(profileAvatarImg || "")}:${encodeURIComponent(frameToUse)}:${encodeURIComponent(String(currentUserId || ""))}] ✨ ${selfName} took seat ${seatIndex + 1} ${equippedRide ? `with ${rideLabel}` : ""}!`,
+            text: `[SEAT:${seatIndex}:${encodeURIComponent(selfName)}:${encodeURIComponent(safeChatAvatar)}:${encodeURIComponent(frameToUse)}:${encodeURIComponent(String(currentUserId || ""))}] [ENTRY:${rideToUse}:${encodeURIComponent(selfName)}:${encodeURIComponent(safeChatAvatar)}:${encodeURIComponent(frameToUse)}:${encodeURIComponent(String(currentUserId || ""))}] ✨ ${selfName} took seat ${seatIndex + 1} ${equippedRide ? `with ${rideLabel}` : ""}!`,
           })
           .catch(() => undefined);
       }
@@ -32155,11 +32212,19 @@ const [isPartyGiftPopupOpen, setIsPartyGiftPopupOpen] = useState<boolean>(false)
                           const isAvatar = cropTargetType === "avatar";
                           const endpoint = isAvatar ? "/api/me/avatar" : "/api/me/cover";
                           try {
-                            const response: any = await api.post(endpoint, { image: uploadedImageSrc });
+                            const compressedImage = await cropAndCompressImage(
+                              uploadedImageSrc,
+                              cropScale,
+                              cropRotate,
+                              isAvatar ? 240 : 640,
+                              isAvatar ? 240 : 320,
+                              isAvatar ? 0.82 : 0.80,
+                            );
+                            const response: any = await api.post(endpoint, { image: compressedImage });
                             const savedUser = response?.user || response;
                             const savedImage = isAvatar
-                              ? savedUser?.avatar || uploadedImageSrc
-                              : savedUser?.cover || uploadedImageSrc;
+                              ? savedUser?.avatar || compressedImage
+                              : savedUser?.cover || compressedImage;
                             if (isAvatar) {
                               setProfileAvatarImg(savedImage);
                               setSelectedProfileUser((current: any) =>
