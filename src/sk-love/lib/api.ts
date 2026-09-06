@@ -19,20 +19,42 @@ export function getBackendCandidates(): string[] {
     : DEFAULT_PRIMARY_API;
 
   const isBrowser = typeof window !== "undefined" && Boolean(window.location?.origin);
+  const hostname = isBrowser ? (window.location.hostname || "").toLowerCase() : "";
   const isSameDomain = isBrowser && window.location.origin.includes("168.144.140.4");
+  const isFirebaseHosting = isBrowser && (
+    hostname.endsWith(".web.app") ||
+    hostname.endsWith(".firebaseapp.com") ||
+    hostname.includes("sklove-abcd")
+  );
+  const isRunApp = isBrowser && hostname.includes("run.app");
 
-  // In web browsers outside the direct backend host, direct cross-origin requests
-  // are blocked by browser CORS policy ("Failed to fetch").
-  // The local Vite reverse-proxy (relative "") proxies requests cleanly without CORS.
   const candidates: string[] = [];
-  if (isBrowser && !isSameDomain) {
-    candidates.push(""); // Local proxy first to bypass browser CORS blocks
+
+  // When hosted on Firebase Hosting (e.g. sklove-abcd.web.app), there is NO Vite proxy.
+  // Direct HTTPS requests to the Laravel backend (https://168.144.140.4.nip.io) MUST be first,
+  // because the backend explicitly supports CORS for sklove-abcd.web.app and sklove-abcd.firebaseapp.com.
+  if (isFirebaseHosting) {
+    if (primaryCandidate) candidates.push(primaryCandidate);
+    if (DEFAULT_PRIMARY_API && !candidates.includes(DEFAULT_PRIMARY_API)) {
+      candidates.push(DEFAULT_PRIMARY_API);
+    }
+    return candidates;
   }
+
+  // In AI Studio preview (*.run.app), direct CORS to nip.io is blocked by browser, so use local Vite proxy ("") first
+  if (isRunApp) {
+    candidates.push("");
+    if (primaryCandidate && !candidates.includes(primaryCandidate)) candidates.push(primaryCandidate);
+    if (DEFAULT_PRIMARY_API && !candidates.includes(DEFAULT_PRIMARY_API)) candidates.push(DEFAULT_PRIMARY_API);
+    return candidates;
+  }
+
+  // General browser / localhost: prefer direct primary candidate first
   if (primaryCandidate) candidates.push(primaryCandidate);
   if (DEFAULT_PRIMARY_API && !candidates.includes(DEFAULT_PRIMARY_API)) {
     candidates.push(DEFAULT_PRIMARY_API);
   }
-  if (!candidates.includes("")) {
+  if (isBrowser && !candidates.includes("")) {
     candidates.push("");
   }
 
@@ -129,10 +151,26 @@ export async function apiFetch<T = any>(
       }
 
       let respBody: any = null;
+      let parseFailed = false;
       try {
         respBody = await response.json();
       } catch {
-        /* non-JSON body */
+        parseFailed = true;
+      }
+
+      // If server or static host returned 200 OK with HTML (e.g. SPA index.html fallback),
+      // it is not a valid API endpoint, so failover to the next candidate
+      const contentType = (response.headers.get("content-type") || "").toLowerCase();
+      const isHtmlResponse = contentType.includes("text/html") || (parseFailed && (!respBody || typeof respBody !== "object"));
+      if (response.ok && isHtmlResponse) {
+        if (i < candidates.length - 1) {
+          console.warn(`[apiFetch] Host ${baseUrl || "relative"} returned HTML instead of JSON for ${path}. Trying next candidate...`);
+          continue;
+        }
+        throw {
+          status: 0,
+          message: "API সার্ভার থেকে সঠিক JSON পাওয়া যায়নি।",
+        };
       }
 
       if (!response.ok) {
